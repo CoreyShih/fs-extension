@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router'
 import { useField } from '../hooks'
 
 const CreateNew = ({ addAnecdote }) => {
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('url')
+  const [content, resetContent] = useField('text')
+  const [author, resetAuthor] = useField('text')
+  const [info, resetInfo] = useField('url')
   const navigate = useNavigate()
 
   const handleSubmit = e => {
@@ -19,9 +19,9 @@ const CreateNew = ({ addAnecdote }) => {
   }
 
   const handleReset = () => {
-    content.reset()
-    author.reset()
-    info.reset()
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
@@ -32,27 +32,21 @@ const CreateNew = ({ addAnecdote }) => {
           content
           <input
             name="content"
-            type={content.type}
-            value={content.value}
-            onChange={content.onChange}
+            {...content}
           />
         </div>
         <div>
           author
           <input
             name="author"
-            type={author.type}
-            value={author.value}
-            onChange={author.onChange}
+            {...author}
           />
         </div>
         <div>
           url for more info
           <input
             name="info"
-            type={info.type}
-            value={info.value}
-            onChange={info.onChange}
+            {...info}
           />
         </div>
         <button type="submit">create</button>
