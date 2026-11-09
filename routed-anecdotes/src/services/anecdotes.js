@@ -10,7 +10,7 @@ const getAll = async () => {
   return await response.json()
 }
 
-const createNew = async (object) => {
+const createNew = async object => {
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -24,4 +24,16 @@ const createNew = async (object) => {
   return await response.json()
 }
 
-export default { getAll, createNew }
+const remove = async object => {
+  const response = await fetch(`${baseUrl}/${object.id}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to delete anecdote')
+  }
+
+  return await response.json()
+}
+
+export default { getAll, createNew, remove }
