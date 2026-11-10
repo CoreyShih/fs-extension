@@ -9,7 +9,7 @@ const blogs = [
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "5a422aa71b54a676234d17f8",
@@ -17,7 +17,7 @@ const blogs = [
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "5a422b3a1b54a676234d17f9",
@@ -25,7 +25,7 @@ const blogs = [
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     likes: 12,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "5a422b891b54a676234d17fa",
@@ -33,7 +33,7 @@ const blogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "5a422ba71b54a676234d17fb",
@@ -41,7 +41,7 @@ const blogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
     likes: 0,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "5a422bc61b54a676234d17fc",
@@ -49,8 +49,8 @@ const blogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
-    __v: 0
-  }
+    __v: 0,
+  },
 ];
 
 test("dummy returns one", () => {
@@ -77,7 +77,10 @@ describe("favorite blog", () => {
   });
 
   test("when list has only one blog equals that blog", () => {
-    assert.deepStrictEqual(listHelper.favoriteBlog(blogs.slice(0, 1)), blogs[0]);
+    assert.deepStrictEqual(
+      listHelper.favoriteBlog(blogs.slice(0, 1)),
+      blogs[0],
+    );
   });
 
   test("of a bigger list is calculated right", () => {
@@ -91,11 +94,17 @@ describe("most blogs", () => {
   });
 
   test("when list has only one blog", () => {
-    assert.deepStrictEqual(listHelper.mostBlogs(blogs.slice(0, 1)), { author: "Michael Chan", blogs: 1 });
+    assert.deepStrictEqual(listHelper.mostBlogs(blogs.slice(0, 1)), {
+      author: "Michael Chan",
+      blogs: 1,
+    });
   });
 
   test("of a bigger list is calculated right", () => {
-    assert.deepStrictEqual(listHelper.mostBlogs(blogs), { author: "Robert C. Martin", blogs: 3 });
+    assert.deepStrictEqual(listHelper.mostBlogs(blogs), {
+      author: "Robert C. Martin",
+      blogs: 3,
+    });
   });
 });
 
@@ -105,10 +114,16 @@ describe("most likes", () => {
   });
 
   test("when list has only one blog", () => {
-    assert.deepStrictEqual(listHelper.mostLikes(blogs.slice(0, 1)), { author: "Michael Chan", likes: 7 });
+    assert.deepStrictEqual(listHelper.mostLikes(blogs.slice(0, 1)), {
+      author: "Michael Chan",
+      likes: 7,
+    });
   });
 
   test("of a bigger list is calculated right", () => {
-    assert.deepStrictEqual(listHelper.mostLikes(blogs), { author: "Edsger W. Dijkstra", likes: 17 });
+    assert.deepStrictEqual(listHelper.mostLikes(blogs), {
+      author: "Edsger W. Dijkstra",
+      likes: 17,
+    });
   });
 });

@@ -17,12 +17,15 @@ describe("when there are initial blogs saved", () => {
     const initialUser = new User({
       username: "root",
       passwordHash,
-      blogs: helper.initialBlogs.map(blog => blog._id),
+      blogs: helper.initialBlogs.map((blog) => blog._id),
     });
     await initialUser.save();
 
     await Blog.deleteMany({});
-    const initialBlogs = helper.initialBlogs.map(blog => ({ ...blog, user: initialUser._id }));
+    const initialBlogs = helper.initialBlogs.map((blog) => ({
+      ...blog,
+      user: initialUser._id,
+    }));
     await Blog.insertMany(initialBlogs);
   });
 
@@ -40,7 +43,7 @@ describe("when there are initial blogs saved", () => {
 
   test("identifier property is named id", async () => {
     const response = await api.get("/api/blogs");
-    const ids = response.body.map(blog => blog.id);
+    const ids = response.body.map((blog) => blog.id);
     assert.strictEqual(new Set(ids).size, helper.initialBlogs.length); // only true if all blogs have an id property and they are all unique
   });
 
@@ -50,25 +53,21 @@ describe("when there are initial blogs saved", () => {
         title: "My New Blog",
         author: "John Doe",
         url: "https://myurlhere.html",
-        likes: 8
+        likes: 8,
       };
 
-      await api
-        .post("/api/blogs")
-        .send(newBlog)
-        .expect(401);
+      await api.post("/api/blogs").send(newBlog).expect(401);
 
       const blogsAtEnd = await helper.blogsInDb();
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
     });
-
 
     test("a new blog can be added", async () => {
       const newBlog = {
         title: "My New Blog",
         author: "John Doe",
         url: "https://myurlhere.html",
-        likes: 8
+        likes: 8,
       };
 
       const response = await api
@@ -84,10 +83,10 @@ describe("when there are initial blogs saved", () => {
 
       const blogsAtEnd = await helper.blogsInDb();
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
-      assert(blogsAtEnd.some(blog => blog.title === newBlog.title));
-      assert(blogsAtEnd.some(blog => blog.author === newBlog.author));
-      assert(blogsAtEnd.some(blog => blog.url === newBlog.url));
-      assert(blogsAtEnd.some(blog => blog.likes === newBlog.likes));
+      assert(blogsAtEnd.some((blog) => blog.title === newBlog.title));
+      assert(blogsAtEnd.some((blog) => blog.author === newBlog.author));
+      assert(blogsAtEnd.some((blog) => blog.url === newBlog.url));
+      assert(blogsAtEnd.some((blog) => blog.likes === newBlog.likes));
     });
 
     test("likes property defaults to 0", async () => {
@@ -95,7 +94,7 @@ describe("when there are initial blogs saved", () => {
         _id: new mongoose.Types.ObjectId(),
         title: "My New Blog",
         author: "John Doe",
-        url: "https://myurlhere.html"
+        url: "https://myurlhere.html",
       };
 
       const response = await api
@@ -110,7 +109,9 @@ describe("when there are initial blogs saved", () => {
         .expect("Content-Type", /application\/json/);
 
       const blogsAtEnd = await helper.blogsInDb();
-      const addedBlog = blogsAtEnd.find(blog => blog.id === newBlog._id.toString());
+      const addedBlog = blogsAtEnd.find(
+        (blog) => blog.id === newBlog._id.toString(),
+      );
       assert.strictEqual(addedBlog.likes, 0);
     });
 
@@ -118,7 +119,7 @@ describe("when there are initial blogs saved", () => {
       const newBlog = {
         author: "John Doe",
         url: "https://myurlhere.html",
-        likes: 8
+        likes: 8,
       };
 
       const response = await api
@@ -139,7 +140,7 @@ describe("when there are initial blogs saved", () => {
       const newBlog = {
         title: "My New Blog",
         author: "John Doe",
-        likes: 8
+        likes: 8,
       };
 
       const response = await api
@@ -172,7 +173,7 @@ describe("when there are initial blogs saved", () => {
         .expect(204);
 
       const blogsAtEnd = await helper.blogsInDb();
-      const ids = blogsAtEnd.map(blog => blog.id);
+      const ids = blogsAtEnd.map((blog) => blog.id);
 
       assert(!ids.includes(blogToDelete.id));
       assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
@@ -187,7 +188,7 @@ describe("when there are initial blogs saved", () => {
         title: "My New Blog",
         author: "John Doe",
         url: "https://myurlhere.html",
-        likes: 8
+        likes: 8,
       };
 
       await api
@@ -196,7 +197,9 @@ describe("when there are initial blogs saved", () => {
         .expect(200);
 
       const blogsAtEnd = await helper.blogsInDb();
-      const updatedBlogAtEnd = blogsAtEnd.find(blog => blog.id === blogToUpdate.id);
+      const updatedBlogAtEnd = blogsAtEnd.find(
+        (blog) => blog.id === blogToUpdate.id,
+      );
       delete updatedBlogAtEnd.id;
       delete updatedBlogAtEnd.user;
 
@@ -211,13 +214,10 @@ describe("when there are initial blogs saved", () => {
         title: "My New Blog",
         author: "John Doe",
         url: "https://myurlhere.html",
-        likes: 8
+        likes: 8,
       };
 
-      await api
-        .put(`/api/blogs/${invalidId}`)
-        .send(updatedBlog)
-        .expect(404);
+      await api.put(`/api/blogs/${invalidId}`).send(updatedBlog).expect(404);
 
       const blogsAtEnd = await helper.blogsInDb();
 

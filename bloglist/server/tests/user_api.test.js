@@ -48,7 +48,7 @@ describe("when there is initially one user in db", () => {
         .expect("Content-Type", /application\/json/);
 
       const usersAtEnd = await helper.usersInDb();
-      const usernames = usersAtEnd.map(user => user.username);
+      const usernames = usersAtEnd.map((user) => user.username);
       assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
       assert(usernames.includes(newUser.username));
     });
@@ -61,10 +61,7 @@ describe("when there is initially one user in db", () => {
         password: "salainen",
       };
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400);
+      await api.post("/api/users").send(newUser).expect(400);
 
       const usersAtEnd = await helper.usersInDb();
       assert.strictEqual(usersAtEnd.length, usersAtStart.length);
@@ -78,10 +75,7 @@ describe("when there is initially one user in db", () => {
         name: "Matti Luukkainen",
       };
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400);
+      await api.post("/api/users").send(newUser).expect(400);
 
       const usersAtEnd = await helper.usersInDb();
       assert.strictEqual(usersAtEnd.length, usersAtStart.length);
@@ -96,10 +90,7 @@ describe("when there is initially one user in db", () => {
         password: "salainen",
       };
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400);
+      await api.post("/api/users").send(newUser).expect(400);
 
       const usersAtEnd = await helper.usersInDb();
       assert.strictEqual(usersAtEnd.length, usersAtStart.length);
@@ -141,7 +132,9 @@ describe("when there is initially one user in db", () => {
         .expect("Content-Type", /application\/json/);
 
       const usersAtEnd = await helper.usersInDb();
-      assert(result.body.error.includes("password must be at least 3 characters"));
+      assert(
+        result.body.error.includes("password must be at least 3 characters"),
+      );
       assert.strictEqual(usersAtEnd.length, usersAtStart.length);
     });
   });

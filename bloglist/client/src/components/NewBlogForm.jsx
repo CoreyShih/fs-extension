@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { TextField, Button } from '@mui/material'
+import { useState } from "react";
+import { TextField, Button } from "@mui/material";
 
 const NewBlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
-  const addBlog = event => {
-    event.preventDefault()
+  const addBlog = (event) => {
+    event.preventDefault();
 
-    createBlog({ title, author, url })
+    createBlog({ title, author, url });
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
 
   return (
     <div>
@@ -22,41 +22,43 @@ const NewBlogForm = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div>
           <TextField
-            label='title'
-            size='small'
-            margin='dense'
+            label="title"
+            size="small"
+            margin="dense"
             style={{ width: 400 }}
-            type='text'
+            type="text"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
           <TextField
-            label='author'
-            size='small'
-            margin='dense'
+            label="author"
+            size="small"
+            margin="dense"
             style={{ width: 400 }}
-            type='text'
+            type="text"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
           <TextField
-            label='url'
-            size='small'
-            margin='dense'
+            label="url"
+            size="small"
+            margin="dense"
             style={{ width: 400 }}
-            type='url'
+            type="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <Button type='submit' variant='contained' style={{ marginTop: 10 }}>create</Button>
+        <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
+          create
+        </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewBlogForm
+export default NewBlogForm;
