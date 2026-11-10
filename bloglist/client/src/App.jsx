@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
+import { ErrorBoundary } from 'react-error-boundary'
 import Notification from './components/Notification'
 import Login from './components/Login'
 import Blog from './components/Blog'
@@ -116,38 +117,40 @@ const App = () => {
           {user && <Button color='inherit' onClick={handleLogout} sx={hoverStyle}>logout</Button>}
         </Toolbar>
       </AppBar>
-      {user && <Typography variant='body1'>{`${user.name} logged in`}</Typography>}
-      <Notification notification={notification} />
-      <Routes>
-        <Route path='/' element={
-          <BlogList
-            blogs={blogs}
-            user={user}
-            onLike={likeBlog}
-            onRemove={removeBlog}
-          />
-        } />
-        <Route path='/create' element={
-          <NewBlogForm createBlog={createBlog} />
-        } />
-        <Route path='/login' element={
-          <Login
-            onLogin={handleLogin}
-            onUsernameChange={({ target }) => setUsername(target.value)}
-            onPasswordChange={({ target }) => setPassword(target.value)}
-            username={username}
-            password={password}
-          />
-        } />
-        <Route path='/blogs/:id' element={
-          <Blog
-            blog={blog}
-            user={user}
-            onLike={() => likeBlog(blog)}
-            onRemove={() => removeBlog(blog)}
-          />
-        } />
-      </Routes>
+      <ErrorBoundary fallback={<h2>Something went wrong :(</h2>}>
+        {user && <Typography variant='body1'>{`${user.name} logged in`}</Typography>}
+        <Notification notification={notification} />
+        <Routes>
+          <Route path='/' element={
+            <BlogList
+              blogs={blogs}
+              user={user}
+              onLike={likeBlog}
+              onRemove={removeBlog}
+            />
+          } />
+          <Route path='/create' element={
+            <NewBlogForm createBlog={createBlog} />
+          } />
+          <Route path='/login' element={
+            <Login
+              onLogin={handleLogin}
+              onUsernameChange={({ target }) => setUsername(target.value)}
+              onPasswordChange={({ target }) => setPassword(target.value)}
+              username={username}
+              password={password}
+            />
+          } />
+          <Route path='/blogs/:id' element={
+            <Blog
+              blog={blog}
+              user={user}
+              onLike={() => likeBlog(blog)}
+              onRemove={() => removeBlog(blog)}
+            />
+          } />
+        </Routes>
+      </ErrorBoundary>
     </Container>
   )
 }
