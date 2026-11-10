@@ -149,6 +149,7 @@ const App = () => {
               onRemove={() => removeBlog(blog)}
             />
           } />
+          <Route path='*' element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
     </Container>
