@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
 import { Container, AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
+import useNotification from "./hooks/useNotification";
 import Notification from "./components/Notification";
 import Login from "./components/Login";
 import Blog from "./components/Blog";
@@ -15,7 +16,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({ message: null });
+  const { notify } = useNotification();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,13 +34,6 @@ const App = () => {
     }
   }, []);
 
-  const notifyWith = (message, isError = false) => {
-    setNotification({ message, isError });
-    setTimeout(() => {
-      setNotification({ message: null });
-    }, 5000);
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -50,10 +44,10 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-      notifyWith("login successful");
+      notify("login successful");
       navigate("/");
     } catch {
-      notifyWith("wrong username or password", true);
+      notify("wrong username or password", true);
     }
   };
 
@@ -61,7 +55,7 @@ const App = () => {
     window.localStorage.removeItem("loggedBloglistUser");
     blogService.setToken(null);
     setUser(null);
-    notifyWith("logout successful");
+    notify("logout successful");
     navigate("/");
   };
 
@@ -69,12 +63,10 @@ const App = () => {
     try {
       const createdBlog = await blogService.create(newBlog);
       setBlogs(blogs.concat(createdBlog).sort((a, b) => b.likes - a.likes));
-      notifyWith(
-        `a new blog ${createdBlog.title} by ${createdBlog.author} added`,
-      );
+      notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`);
       navigate("/");
     } catch {
-      notifyWith("title and url required", true);
+      notify("title and url required", true);
     }
   };
 
@@ -84,9 +76,9 @@ const App = () => {
       await blogService.update(blog.id, likedBlog);
       const updatedBlogs = blogs.map((b) => (b.id === blog.id ? likedBlog : b));
       setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
-      notifyWith(`Liked ${blog.title} by ${blog.author}`);
+      notify(`Liked ${blog.title} by ${blog.author}`);
     } catch {
-      notifyWith("failed to like blog", true);
+      notify("failed to like blog", true);
     }
   };
 
@@ -95,10 +87,10 @@ const App = () => {
       try {
         await blogService.remove(blog.id);
         setBlogs(blogs.filter((b) => b.id !== blog.id));
-        notifyWith(`${blog.title} by ${blog.author} removed`);
+        notify(`${blog.title} by ${blog.author} removed`);
         navigate("/");
       } catch {
-        notifyWith("failed to remove blog", true);
+        notify("failed to remove blog", true);
       }
     }
   };
@@ -149,7 +141,7 @@ const App = () => {
         {user && (
           <Typography variant="body1">{`${user.name} logged in`}</Typography>
         )}
-        <Notification notification={notification} />
+        <Notification />
         <Routes>
           <Route
             path="/"

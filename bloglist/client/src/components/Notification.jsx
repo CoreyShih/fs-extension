@@ -1,18 +1,19 @@
 import { Alert } from "@mui/material";
+import useNotification from "../hooks/useNotification";
 
-const Notification = ({ notification }) => {
-  const { message, isError } = notification;
+const Notification = () => {
+  const { notification } = useNotification();
 
-  if (!message) {
+  if (!notification.message) {
     return null;
   }
 
   return (
     <Alert
       style={{ marginTop: 10, marginBottom: 10 }}
-      severity={isError ? "error" : "success"}
+      severity={notification.isError ? "error" : "success"}
     >
-      {message}
+      {notification.message}
     </Alert>
   );
 };
