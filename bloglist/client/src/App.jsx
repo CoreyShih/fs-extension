@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
 import {
   Container,
@@ -11,53 +10,22 @@ import {
 } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 import { useBlogs } from "./hooks/useBlogs";
+import useUser from "./hooks/useUser";
 import useNotification from "./hooks/useNotification";
 import Notification from "./components/Notification";
 import Login from "./components/Login";
 import Blog from "./components/Blog";
 import BlogList from "./components/BlogList";
 import NewBlogForm from "./components/NewBlogForm";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
 
 const App = () => {
   const { blogs, isPending } = useBlogs();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const { user, logout } = useUser();
   const { notify } = useNotification();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      blogService.setToken(user.token);
-      setUser(user);
-    }
-  }, []);
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const user = await loginService.login({ username, password });
-      window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
-      notify("login successful");
-      navigate("/");
-    } catch {
-      notify("wrong username or password", true);
-    }
-  };
-
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBloglistUser");
-    blogService.setToken(null);
-    setUser(null);
+    logout();
     notify("logout successful");
     navigate("/");
   };
@@ -129,19 +97,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<BlogList />} />
           <Route path="/create" element={<NewBlogForm />} />
-          <Route
-            path="/login"
-            element={
-              <Login
-                onLogin={handleLogin}
-                onUsernameChange={({ target }) => setUsername(target.value)}
-                onPasswordChange={({ target }) => setPassword(target.value)}
-                username={username}
-                password={password}
-              />
-            }
-          />
-          <Route path="/blogs/:id" element={<Blog blog={blog} user={user} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/blogs/:id" element={<Blog blog={blog} />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>

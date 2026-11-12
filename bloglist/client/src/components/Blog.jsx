@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useBlogs } from "../hooks/useBlogs";
+import useUser from "../hooks/useUser";
 import useNotification from "../hooks/useNotification";
 import {
   Card,
@@ -10,8 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const { updateBlog, removeBlog } = useBlogs();
+  const { user } = useUser();
   const { notify } = useNotification();
   const navigate = useNavigate();
 
