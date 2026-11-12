@@ -1,25 +1,39 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useBlogs } from "../hooks/useBlogs";
+import useNotification from "../hooks/useNotification";
 import { TextField, Button } from "@mui/material";
 
-const NewBlogForm = ({ createBlog }) => {
+const NewBlogForm = () => {
+  const { createBlog } = useBlogs();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const { notify } = useNotification();
+  const navigate = useNavigate();
 
-  const addBlog = (event) => {
+  const handleCreateBlog = (event) => {
     event.preventDefault();
 
-    createBlog({ title, author, url });
-
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+    createBlog(
+      { title, author, url },
+      {
+        onSuccess: (newBlog) => {
+          notify(`a new blog ${newBlog.title} by ${newBlog.author} added`);
+          setTitle("");
+          setAuthor("");
+          setUrl("");
+          navigate("/");
+        },
+        onError: () => notify("title and url required", true),
+      },
+    );
   };
 
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={addBlog}>
+      <form onSubmit={handleCreateBlog}>
         <div>
           <TextField
             label="title"

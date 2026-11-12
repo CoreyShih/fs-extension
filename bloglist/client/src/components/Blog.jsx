@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { useBlogs } from "../hooks/useBlogs";
+import useNotification from "../hooks/useNotification";
 import {
   Card,
   CardActions,
@@ -7,11 +10,37 @@ import {
   Typography,
 } from "@mui/material";
 
-const Blog = ({ blog, user, onLike, onRemove }) => {
+const Blog = ({ blog, user }) => {
+  const { updateBlog, removeBlog } = useBlogs();
+  const { notify } = useNotification();
+  const navigate = useNavigate();
+
   // avoid errors when rendering before blogs have been fetched from backend
   if (!blog) {
     return null;
   }
+
+  const handleLikeBlog = () => {
+    updateBlog(
+      { id: blog.id, blog: { ...blog, likes: blog.likes + 1 } },
+      {
+        onSuccess: () => notify(`Liked ${blog.title} by ${blog.author}`),
+        onError: () => notify("failed to like blog", true),
+      },
+    );
+  };
+
+  const handleRemoveBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      removeBlog(blog.id, {
+        onSuccess: () => {
+          notify(`${blog.title} by ${blog.author} removed`);
+          navigate("/");
+        },
+        onError: () => notify("failed to remove blog", true),
+      });
+    }
+  };
 
   // must be logged in to like blog
   const showLikeButton = { display: user ? "" : "none" };
@@ -39,7 +68,7 @@ const Blog = ({ blog, user, onLike, onRemove }) => {
         <Button
           variant="outlined"
           size="small"
-          onClick={onLike}
+          onClick={handleLikeBlog}
           style={showLikeButton}
         >
           like
@@ -48,7 +77,7 @@ const Blog = ({ blog, user, onLike, onRemove }) => {
           variant="outlined"
           size="small"
           color="error"
-          onClick={onRemove}
+          onClick={handleRemoveBlog}
           style={showRemoveButton}
         >
           remove

@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
-import { Container, AppBar, Toolbar, Button, Typography } from "@mui/material";
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
+import { useBlogs } from "./hooks/useBlogs";
 import useNotification from "./hooks/useNotification";
 import Notification from "./components/Notification";
 import Login from "./components/Login";
@@ -12,18 +21,19 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  // const [blogs, setBlogs] = useState([]);
+  const { blogs, isPending } = useBlogs();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const { notify } = useNotification();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  }, []);
+  // useEffect(() => {
+  //   blogService
+  //     .getAll()
+  //     .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
@@ -59,43 +69,60 @@ const App = () => {
     navigate("/");
   };
 
-  const createBlog = async (newBlog) => {
-    try {
-      const createdBlog = await blogService.create(newBlog);
-      setBlogs(blogs.concat(createdBlog).sort((a, b) => b.likes - a.likes));
-      notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`);
-      navigate("/");
-    } catch {
-      notify("title and url required", true);
-    }
-  };
+  // const createBlog = async (newBlog) => {
+  //   try {
+  //     const createdBlog = await blogService.create(newBlog);
+  //     setBlogs(blogs.concat(createdBlog).sort((a, b) => b.likes - a.likes));
+  //     notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`);
+  //     navigate("/");
+  //   } catch {
+  //     notify("title and url required", true);
+  //   }
+  // };
 
-  const likeBlog = async (blog) => {
-    try {
-      const likedBlog = { ...blog, likes: blog.likes + 1 };
-      await blogService.update(blog.id, likedBlog);
-      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? likedBlog : b));
-      setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
-      notify(`Liked ${blog.title} by ${blog.author}`);
-    } catch {
-      notify("failed to like blog", true);
-    }
-  };
+  // const likeBlog = async (blog) => {
+  //   try {
+  //     const likedBlog = { ...blog, likes: blog.likes + 1 };
+  //     await blogService.update(blog.id, likedBlog);
+  //     const updatedBlogs = blogs.map((b) => (b.id === blog.id ? likedBlog : b));
+  //     setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
+  //     notify(`Liked ${blog.title} by ${blog.author}`);
+  //   } catch {
+  //     notify("failed to like blog", true);
+  //   }
+  // };
 
-  const removeBlog = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      try {
-        await blogService.remove(blog.id);
-        setBlogs(blogs.filter((b) => b.id !== blog.id));
-        notify(`${blog.title} by ${blog.author} removed`);
-        navigate("/");
-      } catch {
-        notify("failed to remove blog", true);
-      }
-    }
-  };
+  // const removeBlog = async (blog) => {
+  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+  //     try {
+  //       await blogService.remove(blog.id);
+  //       setBlogs(blogs.filter((b) => b.id !== blog.id));
+  //       notify(`${blog.title} by ${blog.author} removed`);
+  //       navigate("/");
+  //     } catch {
+  //       notify("failed to remove blog", true);
+  //     }
+  //   }
+  // };
 
   const match = useMatch("/blogs/:id");
+
+  if (isPending) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        <CircularProgress aria-label="Loading…" />
+      </Box>
+    );
+  }
+
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null;
 
   const hoverStyle = { "&:hover": { bgcolor: "rgba(255,255,255,0.3)" } };
@@ -143,21 +170,8 @@ const App = () => {
         )}
         <Notification />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <BlogList
-                blogs={blogs}
-                user={user}
-                onLike={likeBlog}
-                onRemove={removeBlog}
-              />
-            }
-          />
-          <Route
-            path="/create"
-            element={<NewBlogForm createBlog={createBlog} />}
-          />
+          <Route path="/" element={<BlogList />} />
+          <Route path="/create" element={<NewBlogForm />} />
           <Route
             path="/login"
             element={
@@ -170,17 +184,7 @@ const App = () => {
               />
             }
           />
-          <Route
-            path="/blogs/:id"
-            element={
-              <Blog
-                blog={blog}
-                user={user}
-                onLike={() => likeBlog(blog)}
-                onRemove={() => removeBlog(blog)}
-              />
-            }
-          />
+          <Route path="/blogs/:id" element={<Blog blog={blog} user={user} />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
