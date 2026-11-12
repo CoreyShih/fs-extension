@@ -21,19 +21,12 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([]);
   const { blogs, isPending } = useBlogs();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const { notify } = useNotification();
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   blogService
-  //     .getAll()
-  //     .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
@@ -68,42 +61,6 @@ const App = () => {
     notify("logout successful");
     navigate("/");
   };
-
-  // const createBlog = async (newBlog) => {
-  //   try {
-  //     const createdBlog = await blogService.create(newBlog);
-  //     setBlogs(blogs.concat(createdBlog).sort((a, b) => b.likes - a.likes));
-  //     notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`);
-  //     navigate("/");
-  //   } catch {
-  //     notify("title and url required", true);
-  //   }
-  // };
-
-  // const likeBlog = async (blog) => {
-  //   try {
-  //     const likedBlog = { ...blog, likes: blog.likes + 1 };
-  //     await blogService.update(blog.id, likedBlog);
-  //     const updatedBlogs = blogs.map((b) => (b.id === blog.id ? likedBlog : b));
-  //     setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
-  //     notify(`Liked ${blog.title} by ${blog.author}`);
-  //   } catch {
-  //     notify("failed to like blog", true);
-  //   }
-  // };
-
-  // const removeBlog = async (blog) => {
-  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-  //     try {
-  //       await blogService.remove(blog.id);
-  //       setBlogs(blogs.filter((b) => b.id !== blog.id));
-  //       notify(`${blog.title} by ${blog.author} removed`);
-  //       navigate("/");
-  //     } catch {
-  //       notify("failed to remove blog", true);
-  //     }
-  //   }
-  // };
 
   const match = useMatch("/blogs/:id");
 
