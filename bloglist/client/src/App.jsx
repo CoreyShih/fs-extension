@@ -95,7 +95,10 @@ const App = () => {
       </AppBar>
       <ErrorBoundary fallback={<h2>Something went wrong :(</h2>}>
         {user && (
-          <Typography variant="body1">{`${user.name} logged in`}</Typography>
+          <Typography
+            variant="body1"
+            align="right"
+          >{`${user.name} logged in`}</Typography>
         )}
         <Notification />
         <Routes>

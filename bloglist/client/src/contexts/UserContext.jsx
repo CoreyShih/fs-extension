@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
+import { getUser, saveUser, removeUser } from "../services/persistentUser";
 
 const UserContext = createContext(null);
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
+    const loggedUserJSON = getUser();
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       blogService.setToken(user.token);
@@ -20,13 +21,13 @@ export const UserProvider = ({ children }) => {
 
   const login = async (username, password) => {
     const user = await loginService.login({ username, password });
-    window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
+    saveUser(user);
     blogService.setToken(user.token);
     setUser(user);
   };
 
   const logout = () => {
-    window.localStorage.removeItem("loggedBloglistUser");
+    removeUser();
     blogService.setToken(null);
     setUser(null);
   };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBlogs } from "../hooks/useBlogs";
 import useNotification from "../hooks/useNotification";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 
 const NewBlogForm = () => {
   const { createBlog } = useBlogs();
@@ -32,7 +32,9 @@ const NewBlogForm = () => {
 
   return (
     <div>
-      <h2>create new</h2>
+      <Typography variant="h5" component="h2" sx={{ my: 1 }}>
+        Create New
+      </Typography>
       <form onSubmit={handleCreateBlog}>
         <div>
           <TextField

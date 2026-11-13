@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
 import useNotification from "../hooks/useNotification";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -27,7 +27,9 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Log in to application</h2>
+      <Typography variant="h5" component="h2" sx={{ my: 1 }}>
+        Log in to Application
+      </Typography>
       <form onSubmit={handleLogin}>
         <div>
           <TextField

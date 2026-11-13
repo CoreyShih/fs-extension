@@ -22,7 +22,7 @@ const Comments = ({ blog }) => {
       { id: blog.id, comment: { comment } },
       {
         onSuccess: () => {
-          notify(`a new comment ${comment} added`);
+          // notify(`a new comment ${comment} added`);
           setComment("");
         },
         onError: () => notify("failed to create comment", true),
