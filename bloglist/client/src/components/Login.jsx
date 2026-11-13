@@ -15,7 +15,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      login(username, password);
+      await login(username, password);
       setUsername("");
       setPassword("");
       notify("login successful");

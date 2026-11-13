@@ -75,4 +75,31 @@ blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
   response.json(await updatedBlog.populate("user", { username: 1, name: 1 }));
 });
 
+blogsRouter.post(
+  "/:id/comments",
+  middleware.userExtractor,
+  async (request, response) => {
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).end();
+    }
+
+    const user = request.user;
+
+    if (!user) {
+      return response.status(400).json({ error: "userId missing or invalid" });
+    }
+
+    blog.comments = blog.comments.concat({
+      body: request.body.comment,
+    });
+
+    const savedBlog = await blog.save();
+    response
+      .status(201)
+      .json(await savedBlog.populate("user", { username: 1, name: 1 }));
+  },
+);
+
 module.exports = blogsRouter;

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useBlogs } from "../hooks/useBlogs";
 import useUser from "../hooks/useUser";
 import useNotification from "../hooks/useNotification";
+import Comments from "./Comments";
 import {
   Card,
   CardActions,
@@ -85,6 +86,7 @@ const Blog = ({ blog }) => {
           remove
         </Button>
       </CardActions>
+      <Comments blog={blog} />
     </Card>
   );
 };

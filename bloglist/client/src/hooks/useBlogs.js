@@ -38,11 +38,21 @@ export const useBlogs = () => {
     },
   });
 
+  const createCommentMutation = useMutation({
+    mutationFn: ({ id, comment }) => blogService.createComment(id, comment),
+    onSuccess: (updatedBlog) => {
+      queryClient.setQueryData(["blogs"], (oldBlogs) =>
+        oldBlogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)),
+      );
+    },
+  });
+
   return {
     blogs: result.data,
     isPending: result.isPending,
     createBlog: createBlogMutation.mutate,
     updateBlog: updateBlogMutation.mutate,
     removeBlog: removeBlogMutation.mutate,
+    createComment: createCommentMutation.mutate,
   };
 };

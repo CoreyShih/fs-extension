@@ -6,6 +6,7 @@ const blogSchema = mongoose.Schema({
   url: { type: String, required: true },
   likes: { type: Number, default: 0 },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  comments: [{ body: String }],
 });
 
 blogSchema.set("toJSON", {
@@ -13,6 +14,14 @@ blogSchema.set("toJSON", {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+
+    if (returnedObject.comments) {
+      returnedObject.comments = returnedObject.comments.map((comment) => {
+        comment.id = comment._id.toString();
+        delete comment._id;
+        return comment;
+      });
+    }
   },
 });
 

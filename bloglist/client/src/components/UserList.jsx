@@ -63,15 +63,16 @@ const UserList = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {users.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell>
-                          <Link to={`/users/${user.id}`}>{user.name}</Link>
-                        </TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>{user.blogs.length}</TableCell>
-                      </TableRow>
-                    ))}
+                    {users &&
+                      users.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell>
+                            <Link to={`/users/${user.id}`}>{user.name}</Link>
+                          </TableCell>
+                          <TableCell>{user.username}</TableCell>
+                          <TableCell>{user.blogs.length}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
