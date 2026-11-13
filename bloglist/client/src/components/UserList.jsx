@@ -1,5 +1,7 @@
+import { Routes, Route, Link, useMatch } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../services/users";
+import User from "./User";
 import {
   Box,
   CircularProgress,
@@ -21,6 +23,8 @@ const UserList = () => {
     refetchOnWindowFocus: false,
   });
 
+  const match = useMatch("/users/:id");
+
   if (isPending) {
     return (
       <Box
@@ -37,31 +41,45 @@ const UserList = () => {
     );
   }
 
+  const user = match ? users.find((user) => user.id === match.params.id) : null;
+
   return (
     <div>
-      <Typography variant="h5" component="h2" sx={{ my: 1 }}>
-        Users
-      </Typography>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Blogs created</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.blogs.length}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <Typography variant="h5" component="h2" sx={{ my: 1 }}>
+                Users
+              </Typography>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Username</TableCell>
+                      <TableCell>Blogs created</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <Link to={`/users/${user.id}`}>{user.name}</Link>
+                        </TableCell>
+                        <TableCell>{user.username}</TableCell>
+                        <TableCell>{user.blogs.length}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          }
+        />
+        <Route path=":id" element={<User user={user} />} />
+      </Routes>
     </div>
   );
 };
