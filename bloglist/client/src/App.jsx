@@ -17,6 +17,7 @@ import Login from "./components/Login";
 import Blog from "./components/Blog";
 import BlogList from "./components/BlogList";
 import NewBlogForm from "./components/NewBlogForm";
+import UserList from "./components/UserList";
 
 const App = () => {
   const { blogs, isPending } = useBlogs();
@@ -62,6 +63,9 @@ const App = () => {
           <Button color="inherit" component={Link} to="/" sx={hoverStyle}>
             blogs
           </Button>
+          <Button color="inherit" component={Link} to="/users" sx={hoverStyle}>
+            users
+          </Button>
           {user && (
             <Button
               color="inherit"
@@ -96,6 +100,7 @@ const App = () => {
         <Notification />
         <Routes>
           <Route path="/" element={<BlogList />} />
+          <Route path="/users" element={<UserList />} />
           <Route path="/create" element={<NewBlogForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/blogs/:id" element={<Blog blog={blog} />} />
