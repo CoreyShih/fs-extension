@@ -2,7 +2,18 @@ import { useState } from "react";
 import { useBlogs } from "../hooks/useBlogs";
 import useUser from "../hooks/useUser";
 import useNotification from "../hooks/useNotification";
-import { TextField, Button, CardContent, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 
 const Comments = ({ blog }) => {
   const { createComment } = useBlogs();
@@ -36,7 +47,7 @@ const Comments = ({ blog }) => {
   return (
     <CardContent>
       <Typography variant="h6" component="div">
-        comments
+        Comments
       </Typography>
       <form onSubmit={handleCreateComment} style={showCommentForm}>
         <TextField
@@ -50,11 +61,19 @@ const Comments = ({ blog }) => {
           add comment
         </Button>
       </form>
-      <ul>
+      <List>
         {blog.comments.map((comment) => (
-          <li key={comment.id}>{comment.body}</li>
+          <>
+            <Divider key={`divider-${comment.id}`} component="li" />
+            <ListItem key={comment.id}>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary={comment.body} />
+            </ListItem>
+          </>
         ))}
-      </ul>
+      </List>
     </CardContent>
   );
 };

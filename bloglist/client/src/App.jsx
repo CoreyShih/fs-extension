@@ -107,7 +107,14 @@ const App = () => {
           <Route path="/create" element={<NewBlogForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/blogs/:id" element={<Blog blog={blog} />} />
-          <Route path="*" element={<h2>404 - Page not found</h2>} />
+          <Route
+            path="*"
+            element={
+              <Typography variant="h5" component="h2" sx={{ my: 1 }}>
+                404 - Page not found
+              </Typography>
+            }
+          />
         </Routes>
       </ErrorBoundary>
     </Container>
